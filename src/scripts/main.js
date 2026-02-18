@@ -1,17 +1,23 @@
 'use strict';
 
 const li = document.querySelectorAll('li');
+const father = li[0].parentNode;
 
 function sortList(list) {
   const resultList = Array.from(list).sort((firstPerson, secondPerson) => {
-    const firstPersonSalary = parseSalary(firstPerson.dataset.salary);
-    const secondPersonSalary = parseSalary(secondPerson.dataset.salary);
+    const firstPersonSalary = parseSalary(firstPerson.dataset.salary, 'salary');
+    const secondPersonSalary = parseSalary(
+      secondPerson.dataset.salary,
+      'salary',
+    );
 
-    return Number(secondPersonSalary) - Number(firstPersonSalary);
+    return secondPersonSalary - firstPersonSalary;
   });
 
   for (const result of resultList) {
-    list[0].parentNode.append(result);
+    if (father) {
+      father.append(result);
+    }
   }
 
   return resultList;
@@ -24,8 +30,8 @@ function getEmployees(list) {
     arraysPersons.push({
       name: oneLi.textContent,
       position: oneLi.dataset.position,
-      salary: parseSalary(oneLi.dataset.salary),
-      age: oneLi.dataset.age,
+      salary: parseSalary(oneLi.dataset.salary, 'salary'),
+      age: parseSalary(oneLi.dataset.age, 'age'),
     });
   }
 
@@ -33,8 +39,14 @@ function getEmployees(list) {
 }
 
 sortList(li);
-getEmployees(li);
+getEmployees(sortList(li));
 
-function parseSalary(str) {
-  return str.slice(1).split(',').join('.');
+function parseSalary(str, what) {
+  if (what === 'salary') {
+    return Number(str.slice(1).split(',').join('.'));
+  }
+
+  if (what === 'age') {
+    return Number(str);
+  }
 }
