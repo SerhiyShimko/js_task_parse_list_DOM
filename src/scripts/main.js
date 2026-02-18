@@ -1,24 +1,17 @@
 'use strict';
 
 const li = document.querySelectorAll('li');
-const perent = document.querySelector('ul');
 
 function sortList(list) {
   const resultList = Array.from(list).sort((firstPerson, secondPerson) => {
-    const firstPersonSalary = firstPerson.dataset.salary
-      .slice(1)
-      .split(',')
-      .join('');
-    const secondPersonSalary = secondPerson.dataset.salary
-      .slice(1)
-      .split(',')
-      .join('');
+    const firstPersonSalary = parseSalary(firstPerson.dataset.salary);
+    const secondPersonSalary = parseSalary(secondPerson.dataset.salary);
 
     return Number(secondPersonSalary) - Number(firstPersonSalary);
   });
 
   for (const result of resultList) {
-    perent.append(result);
+    list[0].parentNode.append(result);
   }
 
   return resultList;
@@ -29,9 +22,9 @@ function getEmployees(list) {
 
   for (const oneLi of list) {
     arraysPersons.push({
-      name: oneLi.innerText,
+      name: oneLi.textContent,
       position: oneLi.dataset.position,
-      salary: oneLi.dataset.salary,
+      salary: parseSalary(oneLi.dataset.salary),
       age: oneLi.dataset.age,
     });
   }
@@ -41,3 +34,7 @@ function getEmployees(list) {
 
 sortList(li);
 getEmployees(li);
+
+function parseSalary(str) {
+  return str.slice(1).split(',').join('.');
+}
